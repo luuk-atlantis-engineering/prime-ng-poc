@@ -1,0 +1,36 @@
+.min-h-3rem {
+  min-height: 3rem;
+}
+
+// Style for draggable items
+[pDraggable] {
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: var(--primary-50);
+    border-color: var(--primary-200);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Drop zone styles
+[pDroppable] {
+  transition: all 0.2s;
+  
+  &.dragover {
+    background-color: var(--primary-50);
+    border-color: var(--primary-300);
+    box-shadow: inset 0 0 0 1px var(--primary-300);
+  }
+}
+
+// Styling for the pivot table cells
+:host ::ng-deep {
+  .p-datatable {
+    .p-datatable-tbody > tr > td {
+      &.text-right {
+        text-align: right;
+      }
+    }
+  }
+} 

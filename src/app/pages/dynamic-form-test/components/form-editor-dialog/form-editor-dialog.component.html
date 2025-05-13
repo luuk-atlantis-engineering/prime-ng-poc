@@ -1,0 +1,123 @@
+<p-dialog 
+  [visible]="visible()"
+  [style]="{width: '500px'}"
+  [modal]="true"
+  [closable]="true"
+  [closeOnEscape]="true"
+  (visibleChange)="cancelEdit()"
+  [header]="(editingQuestion() ? 'DYNAMIC_FORM_TEST.EDITOR.EDIT_FIELD' : 'DYNAMIC_FORM_TEST.EDITOR.ADD_FIELD') | translate"
+>
+  <form [formGroup]="fieldForm" (ngSubmit)="saveField()">
+    <div class="mb-4">
+      <label for="controlType" class="block mb-2">{{ 'DYNAMIC_FORM_TEST.EDITOR.FIELD_TYPE' | translate }}</label>
+      <p-dropdown
+        id="controlType"
+        [options]="fieldTypes"
+        formControlName="controlType"
+        optionLabel="label"
+        optionValue="value"
+        [disabled]="!!editingQuestion"
+        class="w-full"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="key" class="block mb-2">{{ 'DYNAMIC_FORM_TEST.EDITOR.FIELD_KEY' | translate }}</label>
+      <input
+        id="key"
+        type="text"
+        pInputText
+        formControlName="key"
+        [disabled]="!!editingQuestion"
+        class="w-full"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="label" class="block mb-2">{{ 'DYNAMIC_FORM_TEST.EDITOR.FIELD_LABEL' | translate }}</label>
+      <input
+        id="label"
+        type="text"
+        pInputText
+        formControlName="label"
+        class="w-full"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label class="flex items-center gap-2">
+        <p-checkbox
+          id="required"
+          formControlName="required"
+          [binary]="true"
+        />
+        {{ 'DYNAMIC_FORM_TEST.EDITOR.REQUIRED' | translate }}
+      </label>
+    </div>
+
+    @if (fieldForm.get('controlType')?.value === 'dropdown' || fieldForm.get('controlType')?.value === 'select') {
+      <div class="mb-4">
+        <label class="block mb-2">{{ 'DYNAMIC_FORM_TEST.EDITOR.OPTIONS' | translate }}</label>
+        @for (option of optionsArray.controls; track $index) {
+          <div class="flex gap-2 mb-2" [formGroup]="getOptionFormGroup($index)">
+            <input
+              type="text"
+              pInputText
+              formControlName="key"
+              placeholder="Key"
+              class="flex-1"
+            />
+            <input
+              type="text"
+              pInputText
+              formControlName="value"
+              placeholder="Value"
+              class="flex-1"
+            />
+            <p-button
+              icon="pi pi-trash"
+              (onClick)="removeOption($index)"
+              severity="danger"
+            />
+          </div>
+        }
+        <p-button
+          icon="pi pi-plus"
+          label="{{ 'DYNAMIC_FORM_TEST.EDITOR.ADD_OPTION' | translate }}"
+          (onClick)="addOption()"
+          severity="secondary"
+        />
+      </div>
+    }
+
+    @if (fieldForm.get('controlType')?.value === 'select') {
+      <div class="mb-4">
+        <label class="flex items-center gap-2">
+          <p-checkbox
+            id="multiple"
+            formControlName="multiple"
+            [binary]="true"
+          />
+          {{ 'DYNAMIC_FORM_TEST.EDITOR.MULTIPLE_SELECT' | translate }}
+        </label>
+      </div>
+    }
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <p-button
+        type="button"
+        label="{{ 'DYNAMIC_FORM_TEST.ACTIONS.CANCEL' | translate }}"
+        (onClick)="cancelEdit()"
+        severity="secondary"
+      />
+      <p-button
+        type="button"
+        label="{{ 'DYNAMIC_FORM_TEST.ACTIONS.SAVE' | translate }}"
+        (onClick)="saveField()"
+        [disabled]="!fieldForm.valid"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,241 @@
+<div class="p-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="flex justify-between items-center mb-4">
+        <span class="p-input-icon-left" style="width: 50%">
+          <i class="pi pi-search"></i>
+          <p-autoComplete
+            [suggestions]="filteredProducts"
+            (completeMethod)="filterProducts($event)"
+            [field]="'category'"
+            [minLength]="1"
+            [dropdown]="true"
+            [(ngModel)]="selectedProduct"
+            (onSelect)="onProductSelect($event)"
+            (onUnselect)="onProductSelect(null)"
+            (onClear)="onClear()"
+            [style]="{'width':'100%'}"
+            placeholder="Search by category..."
+            [inputStyle]="{'width':'100%'}"
+            [inputId]="'search'">
+          </p-autoComplete>
+        </span>
+        <p-button
+          [icon]="isEditMode() ? 'pi pi-eye' : 'pi pi-pencil'"
+          [label]="(isEditMode() ? 'DATA_TABLE_TEST.ACTIONS.PREVIEW' : 'DATA_TABLE_TEST.ACTIONS.EDIT') | translate"
+          (onClick)="toggleEditMode()"
+          severity="secondary"
+        />
+      </div>
+
+      @if (isEditMode()) {
+        <div class="grid">
+          <div class="col-12 md:col-3">
+            <div class="p-card p-3 mb-3">
+              <h3 class="font-bold mb-3">Column Management</h3>
+              
+              <div class="mb-4">
+                <h4 class="font-semibold mb-2">Management Mode</h4>
+                <p-selectButton 
+                  [options]="columnManagementModeOptions" 
+                  [ngModel]="columnManagementMode()" 
+                  (onChange)="onColumnManagementModeChange($event.value)"
+                  optionLabel="label" 
+                  optionValue="value">
+                </p-selectButton>
+              </div>
+              
+              @if (columnManagementMode() === 'checkbox') {
+                <div class="mb-4">
+                  <h4 class="font-semibold mb-2">Column Visibility</h4>
+                  <div class="border-1 border-round p-2 bg-gray-50">
+                    @for (column of availableColumns; track column.field) {
+                      <div class="p-2 mb-2 surface-card border-1 border-round flex align-items-center">
+                        <p-checkbox 
+                          [binary]="true" 
+                          [(ngModel)]="column.visible" 
+                          (onChange)="updateColumnLists()"
+                          [inputId]="'col_' + column.field">
+                        </p-checkbox>
+                        <label [for]="'col_' + column.field" class="ml-2">{{ column.header }}</label>
+                      </div>
+                    }
+                  </div>
+                </div>
+              } @else {
+                <div class="mb-4">
+                  <h4 class="font-semibold mb-2">Hidden Columns</h4>
+                  <p class="text-sm text-500 mb-2">Drag columns to add them to the table</p>
+                  <div 
+                    class="column-drop-zone" 
+                    [ngClass]="{'dragover': isDragging() && isTableColumnDragging()}"
+                    pDroppable="columns"
+                    (onDrop)="onRemoveColumnFromTable(draggedColumn()!)">
+                    @for (column of hiddenColumns(); track column.field) {
+                      <div 
+                        class="column-item" 
+                        pDraggable="columns" 
+                        (onDragStart)="onColumnDragStart(column)" 
+                        (onDragEnd)="onColumnDragEnd()">
+                        <span>{{ column.header }}</span>
+                        <i class="pi pi-plus text-primary"></i>
+                      </div>
+                    }
+                    @if (hiddenColumns().length === 0) {
+                      <div class="p-3 text-center text-500">
+                        No hidden columns available
+                      </div>
+                    }
+                  </div>
+                  
+                  <div class="text-sm bg-blue-50 p-3 border-round mt-3">
+                    <i class="pi pi-info-circle mr-2 text-blue-500"></i>
+                    <span>Drag columns from here to add them to the table, or drag columns from the table to hide them.</span>
+                  </div>
+                </div>
+              }
+              
+            </div>
+          </div>
+          
+          <div class="col-12 md:col-9">
+            <div class="relative">
+              <p-table [value]="filteredTableProducts" 
+                      [tableStyle]="{'min-width': '50rem'}" 
+                      styleClass="p-datatable-sm"
+                      [paginator]="true"
+                      [rows]="10"
+                      [rowsPerPageOptions]="[10, 20, 50]"
+                      [showCurrentPageReport]="true"
+                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
+                <ng-template pTemplate="header">
+                  <tr>
+                    @for (column of visibleColumnsArray; track column.field; let i = $index) {
+                      <th 
+                        pDraggable="columns" 
+                        (onDragStart)="onColumnDragStart(column, true)" 
+                        (onDragEnd)="onColumnDragEnd()"
+                        pDroppable="columns" 
+                        (onDrop)="onColumnDrop(i)"
+                        [ngClass]="{'column-dragging': isDragging() && draggedColumn()?.field === column.field, 'column-drop-target': isDragging() && draggedColumn()?.field !== column.field && !isTableColumnDragging()}"
+                        class="cursor-move">
+                        <div class="flex align-items-center">
+                          <i class="pi pi-bars mr-2 text-500"></i>
+                          <span>{{ column.header }}</span>
+                        </div>
+                      </th>
+                    }
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                  <tr>
+                    @for (column of visibleColumnsArray; track column.field) {
+                      <td>
+                        @if (column.field === 'expirationDate') {
+                          {{ product[column.field] | date:'mediumDate' }}
+                        } @else {
+                          {{ product[column.field] }}
+                        }
+                      </td>
+                    }
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div>
+          <p-table [value]="filteredTableProducts" 
+                  [tableStyle]="{'min-width': '50rem'}" 
+                  styleClass="p-datatable-sm"
+                  [paginator]="true"
+                  [rows]="10"
+                  [rowsPerPageOptions]="[10, 20, 50]"
+                  [showCurrentPageReport]="true"
+                  dataKey="id"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
+            <ng-template pTemplate="header">
+              <tr>
+                @for (column of visibleColumnsArray; track column.field) {
+                  <th>
+                    <div class="flex align-items-center justify-content-left mb-2">
+                      <span>{{ column.header }}</span>
+                    </div>
+                    @if (column.field !== 'id') {
+                      <p-columnFilter 
+                        [field]="column.field" 
+                        [showMenu]="true"
+                        [showClearButton]="true"
+                        styleClass="p-fluid"
+                        [matchModeOptions]="column.field === 'expirationDate' ? 
+                          [
+                            { label: 'Date is', value: 'dateIs' },
+                            { label: 'Date is not', value: 'dateIsNot' },
+                            { label: 'Before', value: 'dateBefore' },
+                            { label: 'After', value: 'dateAfter' }
+                          ] : 
+                          column.field === 'quantity' || column.field === 'price' || column.field === 'rating' ?
+                          [
+                            { label: 'Equals', value: 'equals' },
+                            { label: 'Not equals', value: 'notEquals' },
+                            { label: 'Less than', value: 'lt' },
+                            { label: 'Greater than', value: 'gt' }
+                          ] :
+                          [
+                            { label: 'Contains', value: 'contains' },
+                            { label: 'Not contains', value: 'notContains' },
+                            { label: 'Starts with', value: 'startsWith' },
+                            { label: 'Ends with', value: 'endsWith' }
+                          ]">
+                        
+                        @if (column.field === 'expirationDate') {
+                          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                            <p-calendar 
+                              [ngModel]="value"
+                              (onSelect)="filter($event)"
+                              (onClear)="filter(null)"
+                              [style]="{'width':'100%'}"
+                              [inputStyle]="{'height':'28px', 'padding-top':'0.25rem', 'padding-bottom':'0.25rem'}"
+                              dateFormat="dd/mm/yy"
+                              [showButtonBar]="true"
+                              placeholder="Select Date"
+                              appendTo="body">
+                            </p-calendar>
+                          </ng-template>
+                        }
+                        <ng-template pTemplate="filter" let-value let-filter="filterCallback" *ngIf="column.field !== 'expirationDate'">
+                          <input 
+                            pInputText 
+                            type="text" 
+                            [ngModel]="value" 
+                            (input)="filter($any($event.target).value)"
+                            class="p-inputtext-sm" 
+                            style="width: 100%; height: 28px; padding-top: 0.25rem; padding-bottom: 0.25rem;" 
+                            [placeholder]="'Search...'">
+                        </ng-template>
+                      </p-columnFilter>
+                    }
+                  </th>
+                }
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+              <tr>
+                @for (column of visibleColumnsArray; track column.field) {
+                  <td>
+                    @if (column.field === 'expirationDate') {
+                      {{ product[column.field] | date:'mediumDate' }}
+                    } @else {
+                      {{ product[column.field] }}
+                    }
+                  </td>
+                }
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      }
+    </div>
+  </div>
+</div> 

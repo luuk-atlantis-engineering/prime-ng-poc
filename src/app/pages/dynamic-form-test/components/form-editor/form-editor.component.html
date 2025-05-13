@@ -1,0 +1,40 @@
+<div class="p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">{{ 'DYNAMIC_FORM_TEST.EDITOR.TITLE' | translate }}</h2>
+      <p-button
+        icon="pi pi-plus"
+        label="{{ 'DYNAMIC_FORM_TEST.EDITOR.ADD_FIELD' | translate }}"
+        (onClick)="showAddFieldDialog()"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      @for (question of questions(); track question.key) {
+        <div class="flex justify-between items-center p-2 border border-gray-300 rounded">
+          <div class="flex gap-2 items-center">
+            <span class="font-medium">{{ question.label }}</span>
+            <span class="text-sm text-text-color-secondary">({{ 'DYNAMIC_FORM_TEST.EDITOR.FIELD_TYPES.' + question.controlType.toUpperCase() | translate }})</span>
+          </div>
+          <div class="flex gap-2">
+            <p-button
+              icon="pi pi-pencil"
+              (onClick)="editField(question)"
+              severity="secondary"
+            />
+            <p-button
+              icon="pi pi-trash"
+              (onClick)="removeField(question)"
+              severity="danger"
+            />
+          </div>
+        </div>
+      }
+    </div>
+
+    <app-form-editor-dialog
+      [editingQuestion]="editingQuestion()"
+      [visible]="showDialog()"
+      (save)="onSave($event)"
+      (cancel)="onCancel()"
+    />
+  </div>

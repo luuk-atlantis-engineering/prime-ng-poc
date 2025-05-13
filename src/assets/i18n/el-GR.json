@@ -1,0 +1,107 @@
+{
+  "topbar": {
+    "dropdown": {
+      "language-title": "Επιλογή Γλώσσας"
+    },
+    "menuitem": {
+      "warehouses": "Αποθήκες",
+      "warehouse_list": "Λίστα Αποθηκών",
+      "warehouse_group_list": "Λίστα Ομάδων Αποθηκών",
+      "dynamic_form_test": "Έλεγχος Δυναμικής Φόρμας",
+      "data_table_test": "Έλεγχος Πίνακα Δεδομένων",
+      "scheduler": "Χρονοπρογραμματιστής"
+    }
+  },
+  "warehouse": {
+    "tree_view": "Προβολή Δέντρου",
+    "table_view": "Προβολή Πίνακα",
+    "columns": {
+      "name": "Όνομα",
+      "code": "Κωδικός",
+      "type": "Τύπος"
+    }
+  },
+  "DYNAMIC_FORM_TEST": {
+    "TITLE": "Δοκιμή Δυναμικής Φόρμας",
+    "FIELDS": {
+      "NAME": "Όνομα",
+      "AGE": "Ηλικία",
+      "TYPE": "Τύπος"
+    },
+    "ACTIONS": {
+      "SUBMIT": "Υποβολή",
+      "RESET": "Επαναφορά",
+      "EDIT": "Επεξεργασία",
+      "PREVIEW": "Προεπισκόπηση",
+      "CANCEL": "Ακύρωση",
+      "SAVE": "Αποθήκευση"
+    },
+    "RESULTS": "Αποτελέσματα Φόρμας",
+    "EDITOR": {
+      "TITLE": "Επεξεργαστής Φόρμας",
+      "ADD_FIELD": "Προσθήκη Πεδίου",
+      "EDIT_FIELD": "Επεξεργασία Πεδίου",
+      "FIELD_TYPE": "Τύπος Πεδίου",
+      "FIELD_KEY": "Κλειδί Πεδίου",
+      "FIELD_LABEL": "Ετικέτα Πεδίου",
+      "REQUIRED": "Υποχρεωτικό",
+      "OPTIONS": "Επιλογές",
+      "ADD_OPTION": "Προσθήκη Επιλογής",
+      "MULTIPLE_SELECT": "Επιτρέψτε Πολλαπλή Επιλογή",
+      "FIELD_TYPES": {
+        "TEXTBOX": "Κείμενο",
+        "DROPDOWN": "Πτυσσόμενη Λίστα",
+        "SELECT": "Πλαίσιο Επιλογής",
+        "CHECKBOX": "Πλαίσιο Επιλογής"
+      }
+    }
+  },
+  "DATA_TABLE_TEST": {
+    "TITLE": "Δοκιμή Πίνακα Δεδομένων",
+    "ACTIONS": {
+      "SUBMIT": "Υποβολή",
+      "RESET": "Επαναφορά",
+      "EDIT": "Επεξεργασία",
+      "PREVIEW": "Προεπισκόπηση"
+    }
+  },
+  "scheduler": {
+    "title": "Χρονοπρογραμματιστής",
+    "navigation": {
+      "previous": "Προηγούμενο",
+      "next": "Επόμενο",
+      "today": "Σήμερα"
+    },
+    "options": {
+      "show_weekends": "Εμφάνιση Σαββατοκύριακων",
+      "hide_weekends": "Απόκρυψη Σαββατοκύριακων"
+    },
+    "tasks": {
+      "title": "Εργασία",
+      "start_time": "Ώρα Έναρξης",
+      "end_time": "Ώρα Λήξης",
+      "duration": "Διάρκεια",
+      "category": "Κατηγορία",
+      "description": "Περιγραφή",
+      "unscheduled": "Μη Προγραμματισμένες Εργασίες",
+      "drag_instruction": "Σύρετε εργασίες για να τις προγραμματίσετε στο ημερολόγιο",
+      "add_task": "Προσθήκη Εργασίας",
+      "edit_task": "Επεξεργασία Εργασίας",
+      "delete_task": "Διαγραφή Εργασίας",
+      "save": "Αποθήκευση Εργασίας",
+      "cancel": "Ακύρωση"
+    },
+    "categories": {
+      "meeting": "Συνάντηση",
+      "call": "Κλήση",
+      "work": "Εργασία",
+      "personal": "Προσωπικό",
+      "other": "Άλλο"
+    },
+    "tooltips": {
+      "click_to_edit": "Κάντε κλικ για επεξεργασία",
+      "drag_to_move": "Σύρετε για μετακίνηση",
+      "drag_from_list": "Σύρετε για προγραμματισμό"
+    }
+  }
+}

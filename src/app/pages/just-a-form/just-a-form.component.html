@@ -1,0 +1,225 @@
+<div class="p-4">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold mb-6">Just a Form</h2>
+      
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="space-y-4">
+          <!-- Name field -->
+          <div class="field">
+            <label for="name" class="block text-sm font-medium mb-1">
+              Name
+              <i class="pi pi-info-circle ml-1 text-gray-500" 
+                 pTooltip="Please enter your full name" 
+                 tooltipPosition="right"></i>
+            </label>
+            <input 
+              id="name"
+              type="text"
+              pInputText
+              formControlName="name"
+              class="w-full"
+              pTooltip="Please enter your full name (first and last name)"
+              tooltipPosition="top"
+            />
+            @if (form.controls['name'].invalid && form.controls['name'].touched) {
+              <small class="text-red-500">Name is required</small>
+            }
+          </div>
+
+          <!-- Email field -->
+          <div class="field">
+            <label for="email" class="block text-sm font-medium mb-1">Email</label>
+            <input 
+              id="email"
+              type="email"
+              pInputText
+              formControlName="email"
+              class="w-full"
+            />
+            @if (form.controls['email'].invalid && form.controls['email'].touched) {
+              <small class="text-red-500">
+                @if (form.controls['email'].errors?.['required']) {
+                  Email is required
+                } @else if (form.controls['email'].errors?.['email']) {
+                  Please enter a valid email address
+                }
+              </small>
+            }
+          </div>
+
+          <!-- Password field -->
+          <div class="field">
+            <label for="password" class="block text-sm font-medium mb-1">Password</label>
+            <p-password
+              id="password"
+              formControlName="password"
+              [feedback]="true"
+              [toggleMask]="true"
+              styleClass="w-full"
+            ></p-password>
+            @if (form.controls['password'].invalid && form.controls['password'].touched) {
+              <small class="text-red-500">
+                @if (form.controls['password'].errors?.['required']) {
+                  Password is required
+                } @else if (form.controls['password'].errors?.['minlength']) {
+                  Password must be at least 8 characters
+                }
+              </small>
+            }
+          </div>
+
+          <!-- Age with InputNumber -->
+          <div class="field">
+            <label for="age" class="block text-sm font-medium mb-1">Age</label>
+            <p-inputNumber
+              id="age"
+              formControlName="age"
+              [showButtons]="true"
+              buttonLayout="horizontal"
+              [min]="0"
+              [max]="120"
+              decrementButtonClass="p-button-danger"
+              incrementButtonClass="p-button-success"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+              styleClass="w-full"
+            ></p-inputNumber>
+          </div>
+
+          <!-- Country dropdown -->
+          <div class="field">
+            <label for="country" class="block text-sm font-medium mb-1">Country</label>
+            <p-dropdown
+              id="country"
+              formControlName="country"
+              [options]="countries"
+              optionLabel="name"
+              optionValue="code"
+              placeholder="Select a Country"
+              styleClass="w-full"
+            ></p-dropdown>
+            @if (form.controls['country'].invalid && form.controls['country'].touched) {
+              <small class="text-red-500">Please select a country</small>
+            }
+          </div>
+
+          <!-- Gender RadioButton -->
+          <div class="field">
+            <label class="block text-sm font-medium mb-1">Gender</label>
+            <div class="flex flex-col gap-2">
+              @for (option of genderOptions; track option.value) {
+                <div class="flex align-items-center">
+                  <p-radioButton
+                    [inputId]="option.value"
+                    [value]="option.value"
+                    formControlName="gender"
+                  ></p-radioButton>
+                  <label [for]="option.value" class="ml-2">{{ option.label }}</label>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Favorite Color with ColorPicker -->
+          <div class="field">
+            <label for="favoriteColor" class="block text-sm font-medium mb-1">Favorite Color</label>
+            <p-colorPicker
+              id="favoriteColor"
+              formControlName="favoriteColor"
+              [inline]="false"
+              [appendTo]="'body'"
+              styleClass="w-full"
+            ></p-colorPicker>
+            <div class="mt-2 h-5 rounded border" [style.background-color]="form.value.favoriteColor"></div>
+          </div>
+
+          <!-- Comments with Textarea -->
+          <div class="field">
+            <label for="comments" class="block text-sm font-medium mb-1">Comments</label>
+            <textarea
+              id="comments"
+              pTextarea
+              formControlName="comments"
+              [autoResize]="true"
+              rows="3"
+              class="w-full"
+            ></textarea>
+          </div>
+
+          <!-- Biography with Editor -->
+          <div class="field">
+            <label for="biography" class="block text-sm font-medium mb-1">Biography</label>
+            <p-editor
+              id="biography"
+              formControlName="biography"
+              [style]="{ height: '200px' }"
+            ></p-editor>
+          </div>
+
+          <!-- File Upload -->
+          <div class="field">
+            <label class="block text-sm font-medium mb-1">Profile Picture</label>
+            <p-fileUpload
+              mode="basic"
+              accept="image/*"
+              [maxFileSize]="1000000"
+              chooseLabel="Browse"
+              (onUpload)="onUpload($event)"
+              [auto]="true"
+              styleClass="w-full"
+            ></p-fileUpload>
+            <div class="mt-2">
+              @if (uploadedFiles.length > 0) {
+                <div class="text-sm">
+                  <strong>Uploaded files:</strong>
+                  <ul class="list-disc ml-5">
+                    @for (file of uploadedFiles; track file.name) {
+                      <li>{{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)</li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Terms checkbox -->
+          <div class="field-checkbox mt-4">
+            <p-checkbox
+              formControlName="agreeToTerms"
+              [binary]="true"
+              inputId="agreeToTerms"
+            ></p-checkbox>
+            <label for="agreeToTerms" class="ml-2">I agree to the terms and conditions</label>
+            @if (form.controls['agreeToTerms'].invalid && form.controls['agreeToTerms'].touched) {
+              <div><small class="text-red-500">You must agree to the terms</small></div>
+            }
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex justify-end gap-2 mt-6">
+          <p-button
+            type="button"
+            label="Reset"
+            (onClick)="resetForm()"
+            severity="secondary"
+          ></p-button>
+          <p-button
+            type="submit"
+            label="Submit"
+            [disabled]="!form.valid"
+          ></p-button>
+        </div>
+      </form>
+
+      <!-- Display submission result -->
+      @if (payLoad()) {
+        <div class="mt-6 p-4 bg-gray-50 rounded">
+          <h3 class="text-lg font-medium mb-2">Form Data:</h3>
+          <pre class="p-2 bg-white rounded overflow-x-auto border">{{ payLoad() }}</pre>
+        </div>
+      }
+    </div>
+  </div>
+</div> 

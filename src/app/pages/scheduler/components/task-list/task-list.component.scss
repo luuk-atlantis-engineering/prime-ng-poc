@@ -1,0 +1,66 @@
+.task-list-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  .task-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+    h3 {
+      margin: 0;
+    }
+  }
+  
+  .task-list {
+    flex: 1;
+    overflow-y: auto;
+    
+    .empty-tasks {
+      background-color: #fff;
+      border: 1px dashed #bdbdbd;
+      border-radius: 4px;
+      padding: 1rem;
+      text-align: center;
+      color: #757575;
+    }
+  }
+}
+
+// Styles for the task dialog
+.task-form {
+  .form-field {
+    margin-bottom: 1rem;
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .w-full {
+      width: 100%;
+    }
+  }
+  
+  .color-indicator {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
+  
+  .mr-2 {
+    margin-right: 0.5rem;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .align-items-center {
+    align-items: center;
+  }
+} 

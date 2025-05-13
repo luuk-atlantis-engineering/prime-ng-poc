@@ -1,0 +1,15 @@
+@use 'primeflex/primeflex.scss';
+@use 'primeicons/primeicons.css';
+@use 'tailwindcss' as *;
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+[ng-reflect-required]+label::after {
+    content: " *";
+    color: var(--danger-500);
+}

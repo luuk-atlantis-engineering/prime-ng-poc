@@ -1,0 +1,126 @@
+{
+  "topbar": {
+    "dropdown": {
+      "language-title": "Select Language"
+    },
+    "menuitem": {
+      "warehouses": "Warehouses",
+      "warehouse_list": "Warehouse List",
+      "warehouse_group_list": "Warehouse Group List",
+      "dynamic_form_test": "Dynamic Form Test",
+      "data_table_test": "Data Table Test",
+      "scheduler": "Scheduler"
+    }
+  },
+  "warehouse": {
+    "tree_view": "Tree View",
+    "table_view": "Table View",
+    "columns": {
+      "name": "Name",
+      "code": "Code",
+      "type": "Type",
+      "address": "Address",
+      "contact": "Contact",
+      "manager": "Manager"
+    },
+    "drawer": {
+      "capacity_overview": "Capacity Overview",
+      "inventory_trends": "Inventory Trends",
+      "recent_activities": "Recent Activities",
+      "capacity_utilization": "Capacity Utilization",
+      "total_capacity": "Total Capacity",
+      "used_capacity": "Used Capacity",
+      "available": "Available",
+      "inventory_trend": "6-Month Inventory Trend"
+    },
+    "actions": {
+      "generate_report": "Generate Report",
+      "assign_manager": "Assign Manager",
+      "schedule_maintenance": "Schedule Maintenance",
+      "view_inventory": "View Inventory"
+    }
+  },
+  "DYNAMIC_FORM_TEST": {
+    "TITLE": "Dynamic Form Test",
+    "FIELDS": {
+      "NAME": "Name",
+      "AGE": "Age",
+      "TYPE": "Type"
+    },
+    "ACTIONS": {
+      "SUBMIT": "Submit",
+      "RESET": "Reset",
+      "EDIT": "Edit",
+      "PREVIEW": "Preview",
+      "CANCEL": "Cancel",
+      "SAVE": "Save"
+    },
+    "RESULTS": "Form Results",
+    "EDITOR": {
+      "TITLE": "Form Editor",
+      "ADD_FIELD": "Add Field",
+      "EDIT_FIELD": "Edit Field",
+      "FIELD_TYPE": "Field Type",
+      "FIELD_KEY": "Field Key",
+      "FIELD_LABEL": "Field Label",
+      "REQUIRED": "Required",
+      "OPTIONS": "Options",
+      "ADD_OPTION": "Add Option",
+      "MULTIPLE_SELECT": "Allow Multiple Selection",
+      "FIELD_TYPES": {
+        "TEXTBOX": "Text Input",
+        "DROPDOWN": "Dropdown",
+        "SELECT": "Select Box",
+        "CHECKBOX": "Checkbox"
+      }
+    }
+  },
+  "DATA_TABLE_TEST": {
+    "TITLE": "Data Table Test",
+    "ACTIONS": {
+      "SUBMIT": "Submit",
+      "RESET": "Reset",
+      "EDIT": "Edit",
+      "PREVIEW": "Preview"
+    }
+  },
+  "scheduler": {
+    "title": "Scheduler",
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "today": "Today"
+    },
+    "options": {
+      "show_weekends": "Show Weekends",
+      "hide_weekends": "Hide Weekends"
+    },
+    "tasks": {
+      "title": "Task",
+      "start_time": "Start Time",
+      "end_time": "End Time",
+      "duration": "Duration",
+      "category": "Category",
+      "description": "Description",
+      "unscheduled": "Unscheduled Tasks",
+      "drag_instruction": "Drag tasks to schedule them on the calendar",
+      "add_task": "Add Task",
+      "edit_task": "Edit Task",
+      "delete_task": "Delete Task",
+      "save": "Save Task",
+      "cancel": "Cancel"
+    },
+    "categories": {
+      "meeting": "Meeting",
+      "call": "Call",
+      "work": "Work",
+      "personal": "Personal",
+      "other": "Other"
+    },
+    "tooltips": {
+      "click_to_edit": "Click to edit task",
+      "drag_to_move": "Drag to move task",
+      "drag_from_list": "Drag to schedule"
+    }
+  }
+}

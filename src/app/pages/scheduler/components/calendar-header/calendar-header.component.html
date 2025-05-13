@@ -1,0 +1,41 @@
+<div class="calendar-header">
+  <div class="header-left">
+    <p-button icon="pi pi-chevron-left" 
+              (onClick)="goToPrevious()" 
+              styleClass="p-button-rounded p-button-text"
+              >
+    </p-button>
+    
+    <p-button icon="pi pi-calendar" 
+              (onClick)="goToToday()" 
+              styleClass="p-button-rounded p-button-text"
+              [label]="'scheduler.navigation.today' | translate">
+    </p-button>
+    
+    <p-button icon="pi pi-chevron-right" 
+              (onClick)="goToNext()" 
+              styleClass="p-button-rounded p-button-text"
+              >
+    </p-button>
+  </div>
+  
+  <div class="header-center">
+    <h2 class="date-range">{{ dateRangeLabel }}</h2>
+  </div>
+  
+  <div class="header-right">
+    <p-selectButton [options]="viewOptions" 
+                    [(ngModel)]="viewState.viewType"
+                    (onChange)="onViewTypeChange($event.value)"
+                    optionLabel="label"
+                    optionValue="value">
+    </p-selectButton>
+    
+    <p-toggleButton *ngIf="viewState.viewType === 'week'"
+                   [(ngModel)]="viewState.showWeekends"
+                   onLabel="{{ 'scheduler.options.show_weekends' | translate }}"
+                   offLabel="{{ 'scheduler.options.hide_weekends' | translate }}"
+                   (onChange)="onToggleWeekends()">
+    </p-toggleButton>
+  </div>
+</div> 

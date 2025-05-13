@@ -1,0 +1,40 @@
+<div class="scheduler-container">
+  <div class="scheduler-header">
+    <h1>{{ 'scheduler.title' | translate }}</h1>
+    <app-calendar-header></app-calendar-header>
+  </div>
+  
+  <div class="scheduler-content">
+    <!-- Week View -->
+    <div *ngIf="viewState?.viewType === 'week'" class="week-view">
+      <div class="time-scale">
+        <div *ngFor="let slot of timeSlots" class="time-slot">
+          {{ slot | date:'shortTime' }}
+        </div>
+      </div>
+      
+      <div class="days-container">
+        <app-day-view *ngFor="let day of dayViewData"
+                     [dayData]="day"
+                     [timeSlots]="timeSlots"
+                     (taskDropped)="onTaskDropped($event)">
+        </app-day-view>
+      </div>
+    </div>
+    
+    <!-- Month View -->
+    <div *ngIf="viewState?.viewType === 'month'" class="month-view">
+      <div class="month-grid">
+        <app-day-view *ngFor="let day of dayViewData"
+                     [dayData]="day"
+                     [timeSlots]="[]"
+                     (taskDropped)="onTaskDropped($event)">
+        </app-day-view>
+      </div>
+    </div>
+  </div>
+  
+  <div class="task-list-section">
+    <app-task-list></app-task-list>
+  </div>
+</div> 

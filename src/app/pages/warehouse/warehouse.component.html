@@ -1,0 +1,136 @@
+<h1>{{ 'topbar.menuitem.warehouse_list' | translate }}</h1>
+
+<p-tabView>
+    <!-- First tab with Tree component -->
+    <p-tabPanel header="{{ 'warehouse.tree_view' | translate }}">
+        <div class="card">
+            <p-tree [value]="warehouses" selectionMode="single" styleClass="p-tree-md" (onNodeSelect)="selectNode($event)">
+                <ng-template pTemplate="default" let-node>
+                    <span>{{ node.data.name }}</span>
+                </ng-template>
+            </p-tree>
+        </div>
+    </p-tabPanel>
+    
+    <!-- Second tab with TreeTable component -->
+    <p-tabPanel header="{{ 'warehouse.table_view' | translate }}">
+        <div class="card">
+            <p-treeTable [value]="warehouses" [columns]="cols" selectionMode="single" (onNodeSelect)="selectTableNode($event)">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{ 'warehouse.columns.' + col.field | translate }}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                    <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">
+                        <td *ngFor="let col of columns; let i = index">
+                            <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0"></p-treeTableToggler>
+                            {{ rowData[col.field] }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-treeTable>
+        </div>
+    </p-tabPanel>
+</p-tabView>
+
+<!-- Drawer for warehouse details -->
+<p-drawer [(visible)]="drawerVisible" position="right" [style]="{width:'50em'}" [blockScroll]="true" 
+          [closeOnEscape]="true" [showCloseIcon]="false" [modal]="true" (onHide)="onDrawerHide()">
+    <ng-template #header>
+        <div class="flex items-center justify-between w-full">
+            <h3 class="m-0">{{ selectedWarehouse?.name }}</h3>
+            <div class="flex">
+                <p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
+                <button pButton type="button" icon="pi pi-bars" (click)="menu.toggle($event)" class="mr-2"></button>
+                <button pButton type="button" icon="pi pi-times" (click)="closeDrawer()" class="p-button-danger"></button>
+            </div>
+        </div>
+    </ng-template>
+    
+    <div class="drawer-content">
+        <ng-container *ngIf="selectedWarehouse">
+            <!-- Card with warehouse header info -->
+            <p-card styleClass="mb-3">
+                <div class="warehouse-header">
+                    <div class="warehouse-status" [ngClass]="{'status-active': selectedWarehouse.status === 'Active', 
+                                                           'status-full': selectedWarehouse.status === 'Full',
+                                                           'status-maintenance': selectedWarehouse.status === 'Maintenance'}">
+                        {{ selectedWarehouse.status }}
+                    </div>
+                    <div class="warehouse-info">
+                        <div class="info-item">
+                            <span class="info-label">{{ 'warehouse.columns.code' | translate }}:</span>
+                            <span class="info-value">{{ selectedWarehouse.code }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">{{ 'warehouse.columns.address' | translate }}:</span>
+                            <span class="info-value">{{ selectedWarehouse.address }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">{{ 'warehouse.columns.contact' | translate }}:</span>
+                            <span class="info-value">{{ selectedWarehouse.contact }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">{{ 'warehouse.columns.manager' | translate }}:</span>
+                            <span class="info-value">{{ selectedWarehouse.manager }}</span>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+            
+            <!-- Accordion with detailed sections -->
+            <p-accordion>
+                <!-- First panel: Capacity -->
+                <p-accordionTab header="{{ 'warehouse.drawer.capacity_overview' | translate }}" [selected]="true">
+                    <div class="chart-container">
+                        <h4>{{ 'warehouse.drawer.capacity_utilization' | translate }}</h4>
+                        <p-chart type="pie" [data]="capacityChartData" [options]="chartOptions" width="100%"></p-chart>
+                        <div class="capacity-stats">
+                            <div class="stats-item">
+                                <span class="stats-label">{{ 'warehouse.drawer.total_capacity' | translate }}:</span>
+                                <span class="stats-value">{{ selectedWarehouse.capacity.toLocaleString() }} sq ft</span>
+                            </div>
+                            <div class="stats-item">
+                                <span class="stats-label">{{ 'warehouse.drawer.used_capacity' | translate }}:</span>
+                                <span class="stats-value">{{ selectedWarehouse.usedCapacity.toLocaleString() }} sq ft ({{ (selectedWarehouse.usedCapacity/selectedWarehouse.capacity*100).toFixed(1) }}%)</span>
+                            </div>
+                            <div class="stats-item">
+                                <span class="stats-label">{{ 'warehouse.drawer.available' | translate }}:</span>
+                                <span class="stats-value">{{ (selectedWarehouse.capacity - selectedWarehouse.usedCapacity).toLocaleString() }} sq ft</span>
+                            </div>
+                        </div>
+                    </div>
+                </p-accordionTab>
+                
+                <!-- Second panel: Inventory Trends -->
+                <p-accordionTab header="{{ 'warehouse.drawer.inventory_trends' | translate }}">
+                    <div class="chart-container">
+                        <h4>{{ 'warehouse.drawer.inventory_trend' | translate }}</h4>
+                        <p-chart type="line" [data]="inventoryChartData" [options]="chartOptions" width="100%"></p-chart>
+                    </div>
+                </p-accordionTab>
+                
+                <!-- Third panel: Recent Activity with Virtual Scroller -->
+                <p-accordionTab header="{{ 'warehouse.drawer.recent_activities' | translate }}">
+                    <div class="activity-container">
+                        <p-scroller [items]="recentActivities" [itemSize]="50" styleClass="activity-scroller" [style]="{height: '300px'}">
+                            <ng-template pTemplate="item" let-activity>
+                                <div class="activity-item">
+                                    <div class="activity-date">{{ activity.date | date:'shortDate' }}</div>
+                                    <div class="activity-details">
+                                        <div class="activity-type">{{ activity.type }}</div>
+                                        <div class="activity-description">{{ activity.description }}</div>
+                                        <div class="activity-user">By: {{ activity.user }}</div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-scroller>
+                    </div>
+                </p-accordionTab>
+            </p-accordion>
+        </ng-container>
+    </div>
+</p-drawer>

@@ -1,0 +1,47 @@
+<div [formGroup]="form" class="mb-4">
+    <label [for]="question.key" class="block text-sm font-medium text-gray-700 mb-1">{{ question.label | translate }}</label>
+    <div>
+      @switch (question.controlType) {
+        @case ('textbox') {
+          <input
+            [id]="question.key"
+            [type]="question.type"
+            pInputText
+            [formControlName]="question.key"
+            class="w-full"
+          />
+        }
+        @case ('dropdown') {
+          <p-dropdown
+            [id]="question.key"
+            [options]="question.options"
+            [formControlName]="question.key"
+            optionLabel="value"
+            optionValue="key"
+            class="w-full"
+          />
+        }
+        @case ('select') {
+          <p-multiSelect
+            [id]="question.key"
+            [options]="question.options"
+            [formControlName]="question.key"
+            optionLabel="value"
+            optionValue="key"
+            [selectionLimit]="isSelectQuestion(question) && question.multiple ? undefined : 1"
+            class="w-full"
+          />
+        }
+        @case ('checkbox') {
+          <p-checkbox
+            [id]="question.key"
+            [formControlName]="question.key"
+            [binary]="true"
+          />
+        }
+      }
+    </div>
+    @if (!isValid()) {
+      <div class="text-red-500 text-sm mt-1">{{ question.label | translate }} is required</div>
+    }
+  </div>

@@ -1,0 +1,114 @@
+.day-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: 1px solid #e0e0e0;
+  position: relative;
+  flex: 1;
+  
+  &.today {
+    background-color: rgba(33, 150, 243, 0.05);
+    
+    .day-header {
+      background-color: #2196f3;
+      color: white;
+    }
+  }
+  
+  &.weekend {
+    background-color: rgba(0, 0, 0, 0.025);
+  }
+  
+  .day-header {
+    text-align: center;
+    padding: 0.5rem;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+    
+    .day-name {
+      font-weight: 500;
+    }
+    
+    .day-date {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  }
+  
+  .day-body {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    
+    .time-slots {
+      height: 100%;
+      position: relative;
+      z-index: 1;
+      
+      .time-slot {
+        height: 60px;
+        border-bottom: 1px solid #eeeeee;
+        position: relative;
+        
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.025);
+        }
+        
+        &.drop-target {
+          background-color: rgba(33, 150, 243, 0.1);
+          border: 2px dashed #2196f3;
+        }
+        
+        .time-label {
+          position: absolute;
+          top: -0.75rem;
+          left: 0.25rem;
+          font-size: 0.75rem;
+          color: #757575;
+        }
+      }
+    }
+    
+    .task-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      pointer-events: none;
+      
+      .task {
+        position: absolute;
+        left: 5%;
+        right: 5%;
+        padding: 0.25rem;
+        border-radius: 3px;
+        background-color: #2196f3;
+        color: white;
+        font-size: 0.75rem;
+        cursor: pointer;
+        overflow: hidden;
+        pointer-events: auto;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        
+        &:hover {
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+          z-index: 10;
+        }
+        
+        .task-time {
+          font-size: 0.7rem;
+          opacity: 0.8;
+        }
+        
+        .task-title {
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,95 @@
+<div class="task-list-container">
+  <div class="task-list-header">
+    <h3>{{ 'scheduler.tasks.unscheduled' | translate }}</h3>
+    <button pButton 
+            icon="pi pi-plus" 
+            [label]="'scheduler.tasks.add_task' | translate"
+            (click)="openNewTaskDialog()">
+    </button>
+  </div>
+  
+  <div class="task-list">
+    <ng-container *ngIf="tasks.length > 0; else emptyTasks">
+      <app-task-item *ngFor="let task of tasks"
+                    [task]="task"
+                    (editTask)="onEditTask($event)"
+                    (deleteTask)="onDeleteTask($event)">
+      </app-task-item>
+    </ng-container>
+    
+    <ng-template #emptyTasks>
+      <div class="empty-tasks">
+        <p>{{ 'scheduler.tasks.drag_instruction' | translate }}</p>
+      </div>
+    </ng-template>
+  </div>
+  
+  <!-- Task Dialog -->
+  <p-dialog [(visible)]="displayTaskDialog" 
+            [header]="(editMode ? 'scheduler.tasks.edit_task' : 'scheduler.tasks.add_task') | translate"
+            [modal]="true" 
+            [draggable]="false"
+            [resizable]="false"
+            [style]="{width: '450px'}">
+    <div class="task-form">
+      <div class="form-field">
+        <label for="title">{{ 'scheduler.tasks.title' | translate }}</label>
+        <input type="text" 
+               pInputText 
+               id="title" 
+               [(ngModel)]="currentTask.title" 
+               class="w-full">
+      </div>
+      
+      <div class="form-field">
+        <label for="description">{{ 'scheduler.tasks.description' | translate }}</label>
+        <textarea pInputText 
+                  id="description" 
+                  [(ngModel)]="currentTask.description" 
+                  rows="3" 
+                  class="w-full"></textarea>
+      </div>
+      
+      <div class="form-field">
+        <label for="category">{{ 'scheduler.tasks.category' | translate }}</label>
+        <p-dropdown id="category" 
+                    [options]="categoryOptions" 
+                    [(ngModel)]="currentTask.category" 
+                    optionLabel="label" 
+                    optionValue="value"
+                    (onChange)="onCategoryChange($event.value)"
+                    [showClear]="true"
+                    placeholder="Select a category"
+                    class="w-full">
+          <ng-template pTemplate="selectedItem">
+            <div class="flex align-items-center" *ngIf="currentTask.category">
+              <span class="color-indicator mr-2" 
+                    [style.backgroundColor]="currentTask.color"></span>
+              <span>{{ 'scheduler.categories.' + currentTask.category.toLowerCase() | translate }}</span>
+            </div>
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <div class="flex align-items-center">
+              <span class="color-indicator mr-2" 
+                    [style.backgroundColor]="option.color"></span>
+              <span>{{ 'scheduler.categories.' + option.value.toLowerCase() | translate }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+      <button pButton 
+              icon="pi pi-times" 
+              [label]="'scheduler.tasks.cancel' | translate" 
+              class="p-button-text" 
+              (click)="hideDialog()"></button>
+      <button pButton 
+              icon="pi pi-check" 
+              [label]="'scheduler.tasks.save' | translate" 
+              class="p-button-text" 
+              (click)="saveTask()"></button>
+    </ng-template>
+  </p-dialog>
+</div> 

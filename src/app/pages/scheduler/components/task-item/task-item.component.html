@@ -1,0 +1,29 @@
+<div class="task-item" 
+     [style.borderLeftColor]="task.color"
+     appDraggable 
+     [task]="task"
+     [pTooltip]="'scheduler.tooltips.drag_from_list' | translate">
+  <div class="task-content">
+    <div class="task-title">{{ task.title }}</div>
+    <div class="task-description" *ngIf="task.description">{{ task.description }}</div>
+    <div class="task-category" *ngIf="task.category">
+      <span class="category-badge" [style.backgroundColor]="task.color">
+        {{ 'scheduler.categories.' + task.category.toLowerCase() | translate }}
+      </span>
+    </div>
+  </div>
+  <div class="task-actions">
+    <button pButton 
+            icon="pi pi-pencil" 
+            class="p-button-text p-button-rounded p-button-sm"
+            (click)="onEditClick($event)"
+            [pTooltip]="'scheduler.tooltips.click_to_edit' | translate">
+    </button>
+    <button pButton 
+            icon="pi pi-trash" 
+            class="p-button-text p-button-rounded p-button-danger p-button-sm"
+            (click)="onDeleteClick($event)"
+            [pTooltip]="'scheduler.tasks.delete_task' | translate">
+    </button>
+  </div>
+</div> 

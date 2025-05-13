@@ -1,0 +1,192 @@
+<div class="p-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Pivot Table</h2>
+        <p-button
+          [icon]="isConfiguring() ? 'pi pi-eye' : 'pi pi-cog'"
+          [label]="isConfiguring() ? 'View Table' : 'Configure Pivot'"
+          (onClick)="toggleConfiguration()"
+          severity="secondary"
+        />
+      </div>
+      
+      @if (isConfiguring()) {
+        <!-- Pivot Configuration -->
+        <div class="grid">
+          <div class="col-12 md:col-3">
+            <div class="p-card p-3 mb-3">
+              <h3 class="font-bold mb-3">Field List</h3>
+              <div class="border-1 border-round p-2 bg-gray-50 mb-3">
+                <h4 class="font-semibold mb-2">Available Fields</h4>
+                <div class="flex flex-column gap-2">
+                  @for (field of availableFields; track field.field) {
+                    <div 
+                      class="p-2 surface-card border-1 border-round flex align-items-center cursor-move"
+                      pDraggable
+                      (onDragStart)="onDragStart(field)"
+                      (onDragEnd)="onDragEnd()">
+                      <i class="pi pi-bars mr-2 text-500"></i>
+                      <span>{{ field.header }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+              
+              <h4 class="font-semibold mb-2">Value Field</h4>
+              <div class="mb-3">
+                <p-dropdown 
+                  [options]="activeValues"
+                  [(ngModel)]="selectedValueField"
+                  (onChange)="onValueFieldChange($event.value)"
+                  optionLabel="header"
+                  optionValue="field"
+                  styleClass="w-full">
+                </p-dropdown>
+              </div>
+              
+              <div class="text-sm bg-blue-50 p-3 border-round">
+                <i class="pi pi-info-circle mr-2 text-blue-500"></i>
+                <span>Drag fields to the appropriate areas to build your pivot table.</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 md:col-9">
+            <div class="grid">
+              <div class="col-12">
+                <div class="p-card p-3 mb-3">
+                  <h3 class="font-bold mb-2">Row Fields</h3>
+                  <div 
+                    class="border-1 border-round p-2 bg-gray-50 min-h-3rem flex flex-wrap gap-2"
+                    pDroppable
+                    (onDrop)="onDropToRows()">
+                    @for (field of pivotConfig.rows; track field.field) {
+                      <div 
+                        class="p-2 surface-card border-1 border-round flex align-items-center cursor-move"
+                        pDraggable
+                        (onDragStart)="onDragStart(field)"
+                        (onDragEnd)="onDragEnd()">
+                        <i class="pi pi-bars mr-2 text-500"></i>
+                        <span>{{ field.header }}</span>
+                      </div>
+                    }
+                    @if (pivotConfig.rows.length === 0) {
+                      <div class="p-2 text-500">Drop row fields here</div>
+                    }
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-12">
+                <div class="p-card p-3 mb-3">
+                  <h3 class="font-bold mb-2">Column Fields</h3>
+                  <div 
+                    class="border-1 border-round p-2 bg-gray-50 min-h-3rem flex flex-wrap gap-2"
+                    pDroppable
+                    (onDrop)="onDropToColumns()">
+                    @for (field of pivotConfig.columns; track field.field) {
+                      <div 
+                        class="p-2 surface-card border-1 border-round flex align-items-center cursor-move"
+                        pDraggable
+                        (onDragStart)="onDragStart(field)"
+                        (onDragEnd)="onDragEnd()">
+                        <i class="pi pi-bars mr-2 text-500"></i>
+                        <span>{{ field.header }}</span>
+                      </div>
+                    }
+                    @if (pivotConfig.columns.length === 0) {
+                      <div class="p-2 text-500">Drop column fields here</div>
+                    }
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-12">
+                <div class="p-card p-3 mb-3">
+                  <h3 class="font-bold mb-2">Value Fields</h3>
+                  <div 
+                    class="border-1 border-round p-2 bg-gray-50 min-h-3rem flex flex-wrap gap-2"
+                    pDroppable
+                    (onDrop)="onDropToValues()">
+                    @for (field of pivotConfig.values; track field.field) {
+                      <div 
+                        class="p-2 surface-card border-1 border-round flex align-items-center cursor-move"
+                        pDraggable
+                        (onDragStart)="onDragStart(field)"
+                        (onDragEnd)="onDragEnd()">
+                        <i class="pi pi-bars mr-2 text-500"></i>
+                        <span>{{ field.header }}</span>
+                      </div>
+                    }
+                    @if (pivotConfig.values.length === 0) {
+                      <div class="p-2 text-500">Drop value fields here</div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <!-- Pivot Table Display -->
+        <div>
+          @if (pivotData.length > 0 && pivotColumns.length > 0) {
+            <p-table [value]="pivotData" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+              <ng-template pTemplate="header">
+                <tr>
+                  <!-- Row headers -->
+                  @for (rowField of activeRows; track rowField.field) {
+                    <th>{{ rowField.header }}</th>
+                  }
+                  
+                  <!-- Column headers - for simplicity we're showing a flat structure -->
+                  @if (hasOneActiveColumn) {
+                    @for (column of pivotColumns; track column.field) {
+                      <th>{{ column.header }}</th>
+                    }
+                  } @else {
+                    <!-- For multiple column fields, we need to group them -->
+                    @for (column of pivotColumns; track column.field) {
+                      <th colspan="1">
+                        <div class="flex flex-column align-items-center">
+                          <span>{{ column.header }}</span>
+                          <span class="text-sm text-500">{{ column.subHeader }}</span>
+                        </div>
+                      </th>
+                    }
+                  }
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData>
+                <tr>
+                  <!-- Row field values -->
+                  @for (rowField of activeRows; track rowField.field) {
+                    <td>{{ rowData[rowField.field] }}</td>
+                  }
+                  
+                  <!-- Pivot data values -->
+                  @for (column of pivotColumns; track column.field) {
+                    <td class="text-right font-medium">{{ rowData[column.field] | number }}</td>
+                  }
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="emptymessageColspan" class="text-center p-4">
+                    No data to display. Please configure the pivot table.
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          } @else {
+            <div class="p-4 text-center border-1 border-round">
+              <i class="pi pi-info-circle mr-2 text-blue-500"></i>
+              <span>Please configure the pivot table to display data.</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div> 

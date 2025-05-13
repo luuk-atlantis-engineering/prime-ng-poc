@@ -1,0 +1,51 @@
+<div class="p-4">
+    <div class="max-w-3xl mx-auto">
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-end mb-4">
+          <p-button
+            [icon]="isEditMode() ? 'pi pi-eye' : 'pi pi-pencil'"
+            [label]="(isEditMode() ? 'DYNAMIC_FORM_TEST.ACTIONS.PREVIEW' : 'DYNAMIC_FORM_TEST.ACTIONS.EDIT') | translate"
+            (onClick)="toggleEditMode()"
+            severity="secondary"
+          />
+        </div>
+
+        @if (isEditMode()) {
+          <app-form-editor
+            [questions]="questions()"
+            (questionsChange)="onQuestionsChange($event)"
+          />
+        } @else {
+          <form [formGroup]="form()" (ngSubmit)="onSubmit()">
+            <div class="space-y-4">
+              <app-dynamic-form-question
+                *ngFor="let question of questions()"
+                [question]="question"
+                [form]="form()"
+              ></app-dynamic-form-question>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-4">
+              <p-button
+                type="button"
+                label="{{ 'DYNAMIC_FORM_TEST.ACTIONS.RESET' | translate }}"
+                (onClick)="resetForm()"
+                severity="secondary"
+              />
+              <p-button
+                type="submit"
+                label="{{ 'DYNAMIC_FORM_TEST.ACTIONS.SUBMIT' | translate }}"
+                [disabled]="!form().valid"
+              />
+            </div>
+          </form>
+        }
+
+        <div class="mt-4 p-4 bg-gray-50 rounded">
+          <pre class="mt-2 p-2 bg-white rounded overflow-x-auto">
+            {{ payLoad() }}
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>

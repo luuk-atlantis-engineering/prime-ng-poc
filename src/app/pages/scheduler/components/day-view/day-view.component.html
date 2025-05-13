@@ -1,0 +1,33 @@
+<div class="day-view" [class.today]="dayData.isToday" [class.weekend]="dayData.isWeekend">
+  <div class="day-header">
+    <div class="day-name">{{ dayData.dayName }}</div>
+    <div class="day-date">{{ dayData.date | date:'d' }}</div>
+  </div>
+  
+  <div class="day-body">
+    <div class="time-slots">
+      <div *ngFor="let slot of timeSlots" 
+           class="time-slot"
+           appDroppable
+           [timeSlot]="slot"
+           (taskDropped)="onTaskDropped(slot)">
+        <div class="time-label">{{ getTimeLabel(slot) }}</div>
+      </div>
+    </div>
+    
+    <div class="task-container">
+      <div *ngFor="let task of dayData.tasks" 
+           class="task"
+           [ngClass]="task.category"
+           [ngStyle]="getTaskPosition(task)"
+           [style.backgroundColor]="task.color"
+           appDraggable
+           [task]="task"
+           [pTooltip]="'scheduler.tooltips.drag_to_move' | translate"
+           (click)="onTaskClick(task)">
+        <div class="task-time">{{ task.startTime | date:'shortTime' }} - {{ task.endTime | date:'shortTime' }}</div>
+        <div class="task-title">{{ task.title }}</div>
+      </div>
+    </div>
+  </div>
+</div> 
